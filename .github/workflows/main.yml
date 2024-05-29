@@ -1,14 +1,9 @@
 name: Run Python Script with Selenium on Windows  
   
 on:  
-  schedule:  
-    - cron: '0 17 * * *'  # 设置为凌晨一点  
-  push:  
-    branches:  
-      - main  
-  pull_request:  
-    branches:  
-      - main  
+  #手动触发方便测试
+  repository_dispatch:  
+    types: [manual-trigger]
   
 jobs:  
   run_python_script:  
