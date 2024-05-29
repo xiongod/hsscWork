@@ -21,10 +21,10 @@ jobs:
         run: |  
           python -m pip install --upgrade pip  
           pip install selenium  
-		  pip install feedparser # 假设你的脚本需要 requests  库rss获取地址
-          pip install pytube # 下载视频
-          pip install moviepy # 音频转视频
-          pip install python-dateutil #处理日期插件
+	  pip install feedparser
+          pip install pytube 
+          pip install moviepy 
+          pip install python-dateutil 
           pip install pytz
           pip install beautifulsoup4
           pip install selenium  
@@ -37,13 +37,13 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
           Expand-Archive chromedriver.zip -DestinationPath .  
           Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
-	  - name: 下载仓库代码
-	    run: |
-	      git clone https://xiongod:${{ secrets.ACCESS_TOKEN }}@github.com/xiongod/hsscWork.git  
-	      cd hsscWork  
-	      git config user.name "xiongod"  
-	      git config user.email "xiongod@outlook.com"
-		  
+      - name: 下载仓库代码
+	run: |
+	  git clone https://xiongod:${{ secrets.ACCESS_TOKEN }}@github.com/xiongod/hsscWork.git  
+	  cd hsscWork  
+	  git config user.name "xiongod"  
+	  git config user.email "xiongod@outlook.com"
+			  
       - name: Run Python script  
         run: |
           dir
