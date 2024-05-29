@@ -13,17 +13,16 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(options=chrome_options)
 
-index = 32
-#while index < 443:
-while index < 42:
-    print(index)
+index = 32-1
+while index < 443:
+#while index < 42:
+    print("开始第"+str(index)+"集爬取……")
     try:
-        time.sleep(60)
         # 打开网页
         url = 'https://mitingshu.com/play/7406-0-'+str(index)+'.html'  # 替换为你要打开的网页URL
         driver.get(url)
         wait = WebDriverWait(driver, 3)
-
+        time.sleep(30)
         title_class = 'f-22'
         title_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'f-22')))
         title = title_element.text
@@ -37,6 +36,7 @@ while index < 42:
 
         with open('./data.txt', 'a', encoding='utf-8') as file:
             file.write(title+'#'+src+'\n')
+        print("第" + str(index) + "集爬取结束")
         index += 1
     except Exception as e:
         print(e)
