@@ -1,38 +1,32 @@
-name: Scheduled Python Script
-
-on:
-  #手动触发方便测试
-  repository_dispatch:  
-    types: [manual-trigger]
-  # 定时触发，有时差
-  #schedule:
-    #凌晨一点
-    #- cron: '0 17 * * *'
-  #push:
-    #branches: [ main ]
-
-jobs:
-  build:
+name: Run Python Script with Selenium on Windows  
+  
+on:  
+  schedule:  
+    - cron: '0 17 * * *'  # 设置为凌晨一点  
+  push:  
+    branches:  
+      - main  
+  pull_request:  
+    branches:  
+      - main  
+  
+jobs:  
+  run_python_script:  
     runs-on: windows-latest  
-#    env:
-#      TZ: Asia/Shanghai  # 设置时区为 Asia/Shanghai（北京时间）
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.x # 或者你需要的 Python 版本
-      - name: Download and setup ChromeDriver  
-        run: |  
-          # 注意：此URL可能需要更新为ChromeDriver的最新版本  
-          $url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.201/win64/chromedriver-win64.zip"  
-          Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
-          Expand-Archive chromedriver.zip -DestinationPath .  
-          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
-      - name: 安装依赖
+  
+    steps:  
+      - uses: actions/checkout@v2  
+  
+      - name: Set up Python  
+        uses: actions/setup-python@v2  
+        with:  
+          python-version: '3.x'  # 或者你需要的 Python 版本  
+  
+      - name: Install dependencies  
         run: |  
           python -m pip install --upgrade pip  
-          pip install feedparser # 假设你的脚本需要 requests  库rss获取地址
+          pip install selenium  
+		  pip install feedparser # 假设你的脚本需要 requests  库rss获取地址
           pip install pytube # 下载视频
           pip install moviepy # 音频转视频
           pip install python-dateutil #处理日期插件
@@ -40,19 +34,27 @@ jobs:
           pip install beautifulsoup4
           pip install selenium  
           pip install lxml
-      # 克隆目标仓库
-      - name: 下载仓库代码
+  
+      - name: Download and setup ChromeDriver  
+        run: |  
+          # 注意：此URL可能需要更新为ChromeDriver的最新版本  
+          $url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.201/win64/chromedriver-win64.zip"  
+          Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
+          Expand-Archive chromedriver.zip -DestinationPath .  
+          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
+	  - name: 下载仓库代码
+	    run: |
+	      git clone https://xiongod:${{ secrets.ACCESS_TOKEN }}@github.com/xiongod/hsscWork.git  
+	      cd hsscWork  
+	      git config user.name "xiongod"  
+	      git config user.email "xiongod@outlook.com"
+		  
+      - name: Run Python script  
         run: |
-          git clone https://xiongood:${{ secrets.ACCESS_TOKEN }}@github.com/xiongod/hsscWork.git  
-          cd hsscWork  
-          git config user.name "xiongod"  
-          git config user.email "xiongod@outlook.com"
-     
-      # 执行python脚本
-      - name: 执行python脚本进行数据下载及处理
-        run: python main.py # 使用绝对路径或相对路径运行脚本
-      # 假设我们要推送一个名为 'new-file.txt' 的文件
-      - name: 把处理好的文件复制到git仓库中
+          dir
+          python mian.py  # 确保文件名正确  
+		  
+	  - name: 把处理好的文件复制到git仓库中
         working-directory: ./
         run: |
           cp -r ./* ./hsscWork/
@@ -66,3 +68,8 @@ jobs:
         env:
           # 在仓库设置中创建一个名为 IMAGES_REPO_PAT 的 secret，并存储您的 Personal Access Token
           IMAGES_REPO_PAT: ${{ secrets.ACCESS_TOKEN }}
+  
+      # （可选）清理步骤，删除下载的ChromeDriver zip文件  
+      - name: Cleanup  
+        run: |  
+          Remove-Item chromedriver.zip
