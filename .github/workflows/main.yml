@@ -38,7 +38,7 @@ jobs:
           $url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.201/win64/chromedriver-win64.zip"  
           Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
           Expand-Archive chromedriver.zip -DestinationPath .  
-          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\chocolatey\bin\  # 或者其他系统PATH中的目录  
+          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
       # 克隆目标仓库
       - name: 下载仓库代码
         run: |
