@@ -13,13 +13,13 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(options=chrome_options)
 
-index = 32-1
+index = 225-1
 while index < 443:
 #while index < 42:
     print("开始第"+str(index)+"集爬取……")
     try:
         # 打开网页
-        url = 'https://mitingshu.com/play/7406-0-'+str(index)+'.html'  # 替换为你要打开的网页URL
+        url = 'https://172.67.174.116/play/7406-0-'+str(index)+'.html'  # 替换为你要打开的网页URL
         driver.get(url)
         wait = WebDriverWait(driver, 3)
         time.sleep(30)
