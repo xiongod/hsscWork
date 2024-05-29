@@ -22,6 +22,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.x # 或者你需要的 Python 版本
+      - name: Download and setup ChromeDriver  
+        run: |  
+          # 注意：此URL可能需要更新为ChromeDriver的最新版本  
+          $url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.201/win64/chromedriver-win64.zip"  
+          Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
+          Expand-Archive chromedriver.zip -DestinationPath .  
+          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
       - name: 安装依赖
         run: |  
           python -m pip install --upgrade pip  
@@ -31,14 +38,8 @@ jobs:
           pip install python-dateutil #处理日期插件
           pip install pytz
           pip install beautifulsoup4
+          pip install selenium  
           pip install lxml
-      - name: Download and setup ChromeDriver  
-        run: |  
-          # 注意：此URL可能需要更新为ChromeDriver的最新版本  
-          $url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.201/win64/chromedriver-win64.zip"  
-          Invoke-WebRequest -Uri $url -OutFile chromedriver.zip  
-          Expand-Archive chromedriver.zip -DestinationPath .  
-          Move-Item .\chromedriver-win64\chromedriver.exe C:\ProgramData\hsscWork\bin\  # 或者其他系统PATH中的目录  
       # 克隆目标仓库
       - name: 下载仓库代码
         run: |
